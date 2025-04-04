@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Dashboard</title>
+    <link rel="stylesheet" href="maki.css">
+    <link rel="stylesheet" href="mem.css">
+    <link rel="stylesheet" href="dely.css">
+    <style>
+      
+    </style>
+</head>
+<body>
+
+
+    
+<!-- Add login form before dashboard -->
+<!-- Registration -->
+<div id="registerPanel" class="auth-panel">
+    <h2>system configuration, 
+    <br>Alert!!!!! any reload means system locking.</h2>
+    <form id="registrationForm">
+        <div class="form-group">
+            <label>Email:</label>
+            <input type="email" id="regEmail" required>
+        </div>
+        <div class="form-group">
+            <label>Password:</label>
+            <input type="password" id="regPassword" required>
+        </div>
+        <div class="form-group">
+            <label>Confirm:</label>
+            <input type="password" id="regConfirm" required>
+        </div>
+        <button type="submit"></button>ACCESS SYSTEM</button>
+    </form>
+</div>
+
+<!-- Login -->
+<div id="loginPanel" class="auth-panel hidden">
+    <h2>reload implies lock</h2>
+    <div id="attemptAlert" class="attempt-counter hidden"></div>
+    <form id="loginForm">
+        <div class="form-group">
+            <label>Email:</label>
+            <input type="email" id="loginEmail" required>
+        </div>
+        <div class="form-group">
+            <label>Password:</label>
+            <input type="password" id="loginPassword" required>
+        </div>
+        <button type="submit">Access System</button>
+    </form>
+</div>
+
+<!-- Recovery -->
+<div id="recoveryPanel" class="auth-panel show">
+    <h2>Account Recovery</h2>
+    <form id="recoveryForm">
+        <div class="form-group">
+            <label>Recovery Code:</label>
+            <input type="text" id="recoveryCode" required>
+        </div>
+        <button type="submit">Verify Identity</button>
+    </form>
+</div>
+
+<!-- Dashboard -->
+<div id="dashboard" class="hidden">
+    <h2>Secure Control Panel</h2>
+
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="nav-item" onclick="showSection('home')">
+            <i class="fas fa-home"></i> Home
+        </div>
+        <div class="nav-item" onclick="showSection('profile')">
+            <i class="fas fa-user"></i> Profile
+        </div>
+        <div class="nav-item" onclick="showSection('messages')">
+            <i class="fas fa-comments"></i> Messages
+        </div>
+        <div class="nav-item" onclick="showSection('contact')">
+            <i class="fas fa-wallet"></i> members
+        </div>
+        <div class="nav-item" onclick="showSection('minfo')">
+            <i class="fas fa-comments"></i>my device
+        </div>
+        <div class="nav-item" onclick="showSection('video')">
+            <i class="fas fa-wallet"></i> videos
+        </div>
+        <div class="nav-item" onclick="showSection('settings')">
+            <i class="fas fa-cog"></i> Settings
+        </div>
+        <div class="nav-item" onclick="showSection('logout')">
+            <i class="fas fa-wallet"></i> logout
+        </div>
+    </div>
+
+
+
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Home Section -->
+        <div id="home" class="dashboard-section active-section">
+            <h2>enjoying the program?</h2>
+>
+               
+            </div>
+        </div>
+
+       
+
+<!-- Add logout button to nav bar (modify existing nav-bar div) -->
+  <div id="logout" class="dashboard-section">
+<div class="nav-bar">
+    <div>
+        <button class="nav-button" style="background: var(--primary); color: white">
+            Members (<span id="memberCount">0</span>)
+        </button>
+        <button class="nav-button" onclick="showHistory()">
+            Membership History
+        </button>
+    </div>
+    <div>
+        <button class="nav-button logout-btn" onclick="handleLogout()">
+            Logout
+        </button>
+        <button class="nav-button" style="background: var(--success); color: white" 
+                onclick="showAddMemberModal()">
+            Add Member
+        </button>
+    </div>
+</div>
+    </div>
+
+
+   <!-- members Section -->
+   <div id="contact" class="dashboard-section">
+
+
+    <div class="dashboard-container">
+        <!-- Navigation Bar -->
+        <nav class="nav-bar">
+            <div>
+                <button class="nav-button" style="background: var(--primary); color: white">
+                    Members (<span id="memberCount">0</span>)
+                </button>
+                <button class="nav-button" onclick="showHistory()">
+                    Membership History
+                </button>
+            </div>
+            <button class="nav-button" style="background: var(--success); color: white" 
+                    onclick="showAddMemberModal()">
+                Add Member
+            </button>
+        </nav>
+
+        <!-- Members Table -->
+        <table class="members-table">
+            <thead>
+                <tr>
+                    <th>user</th>
+                    <th>Full Name</th>
+                    <th>Contact</th>
+                    <th>Details</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="membersBody">
+                <!-- Dynamically populated -->
+            </tbody>
+        </table>
+
+        <!-- Add Member Modal -->
+        <div class="modal-overlay" id="addMemberModal">
+            <div class="modal-content">
+                <h2>Add New Member</h2>
+                <form id="memberForm" onsubmit="return handleSubmit(event)">
+                    <input type="file" id="avatarUpload" accept="image/*" required
+                           onchange="previewAvatar(event)">
+                    <div id="avatarPreview" style="margin: 10px 0"></div>
+                    
+                    <input type="text" placeholder="Full Name" id="fullName" required>
+                    <input type="email" placeholder="Email" id="email" required>
+                    <input type="tel" placeholder="Phone" id="phone" required>
+                    
+                    <select id="gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                    
+                    <input type="date" id="dob" required>
+                    
+                    <div style="margin-top: 20px">
+                        <button type="button" onclick="closeModal()">Cancel</button>
+                        <button type="submit">Add Member</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+   </div>
+        <!-- Profile Section -->
+        <div id="profile" class="dashboard-section">
+            <h2>user profile</h2>      
+
+            <div class="profile-container">
+                <div class="avatar-upload">
+                  <label for="fileInput">
+                    <img id="previewImage" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZWVlIi8+PC9zdmc+" 
+                         class="avatar-image" 
+                         alt="Profile Preview">
+                    <div class="camera-icon">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                        <circle cx="12" cy="13" r="4"/>
+                      </svg>
+                    </div>
+                  </label>
+                  <input type="file" 
+                         id="fileInput" 
+                         accept="image/*" 
+                         capture="environment">
+                </div>
+                <div class="upload-status" id="statusText">Click camera to upload photo</div>
+              </div>
+              <div class="form-group">
+                <label>Full Name:</label>
+                <input type="text" id="fullName" value="John Doe">
+            </div>
+          
+            
+        
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" id="email" value="john@example.com"> 
+                </div>
+           
+            <button onclick="updateProfile()">Save Changes</button>
+        </div>
+        <div id="minfo" class="dashboard-section">
+        <div class="dashboard">
+            <div class="time-display">
+                <div id="live-clock">Loading time...</div>
+                <div id="live-date"></div>
+            </div>
+            
+            <div class="dashboard-functionality">
+                <div class="dashboard-panel">
+                    <h3>System Monitor</h3>
+                    <!-- Add other dashboard elements here -->
+                </div>
+                <div class="dashboard-panel">
+                    <h3>Notifications</h3>
+                    <!-- Add other dashboard elements here -->
+                </div>
+            </div>
+        </div>
+    
+        <script>
+            // Time detection and formatting functions
+            const formatTimeUnit = (unit) => unit.toString().padStart(2, '0');
+            
+            const getCurrentDateTime = () => {
+                const now = new Date();
+                return {
+                    time: `${formatTimeUnit(now.getHours())}:${formatTimeUnit(now.getMinutes())}:${formatTimeUnit(now.getSeconds())}`,
+                    date: now.toLocaleDateString('en-US', { 
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    }),
+                    timestamp: now.getTime()
+                };
+            };
+    
+            // DOM update function
+            const updateDisplay = () => {
+                const { time, date } = getCurrentDateTime();
+                document.getElementById('live-clock').textContent = time;
+                document.getElementById('live-date').textContent = date;
+            };
+    
+            // Initial update
+            updateDisplay();
+            
+            // Start continuous update
+            const timeUpdateInterval = setInterval(updateDisplay, 1000);
+    
+            // Cleanup on window close
+            window.addEventListener('beforeunload', () => {
+                clearInterval(timeUpdateInterval);
+            });
+        </script>
+
+
+            <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"
+             sync defer></script>
+            <div class="dashboard">
+                <div class="grid-container">
+                  <div>
+                    <div class="analytics-card">
+                      <h2>Device Profile</h2>
+                      <div id="deviceData"></div>
+                    </div>
+                    <div class="calendar-container">
+                        <div class="calendar-header">
+                          <button class="nav-button" id="prevMonth">←</button>
+                          <div class="month-year" id="currentMonth">March 2025</div>
+                          <button class="nav-button" id="nextMonth">→</button>
+                        </div>
+                        
+                        <div class="calendar-grid" id="calendarBody">
+                          <!-- Days will be populated by JavaScript -->
+                        </div>
+                        
+                        
+                    
+
+                    <div class="analytics-card">
+                      <h2>Network Analysis</h2>
+                      <div id="networkData"></div>
+                    </div>
+                  </div>
+                  <div class="battery-container">
+                    <div class="battery-icon">
+                      <div class="battery-level"></div>
+                      <div class="charging-bolt">⚡</div>
+                    </div>
+                    <div class="battery-text"></div>
+                  </div>
+
+                    <div class="weather" id="weatherWidget">
+                      <div class="temp">--°C</div>
+                      <div class="condition">Loading...</div>
+                    </div>
+                  </div>
+                
+                  <div>
+                    <div class="analytics-card">
+                      <h2>Regional Signals</h2>
+                      <div id="map"></div>
+                      <div id="geoData" class="mt-2"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+        </div>
+
+
+
+
+
+        <!-- Messages Section -->
+        <div id="messages" class="dashboard-section">
+            <h2>Messaging</h2>
+            <div class="nav-links">
+                <a href="mess.html" class="nav-link active" rel="noopener" 
+                target="contentFrame">show messages</a>
+        </div>
+
+        <!-- Deposit Section -->
+        <div id="deposit" class="dashboard-section">
+            <h2>Deposit Funds</h2>
+            <div class="form-group">
+                <label>Amount:</label>
+                <input type="number" id="depositAmount" min="0" step="0.01">
+            </div>
+            <button onclick="depositFunds()">Deposit</button>
+        </div>
+
+        <!-- Settings Section -->
+        <div id="settings" class="dashboard-section">
+            <h2>Account Settings</h2>
+            <div class="form-group">
+                <label>Change Password:</label>
+                <input type="password" id="newPassword" placeholder="New Password">
+            </div>
+            <button onclick="updatePassword()">Update Password</button>
+        </div>
+    </div>
+    
+<script src="mem.js"></script>
+    <script src="maki.js"></script>
+          
+      
+    <button onclick="initiateLogout()">Logout</button>
+    
+<!-- Confirmation Dialog -->
+<div id="confirmationDialog" class="confirmation-dialog hidden">
+    <h3> ROCK</h3>
+    <p>Are you sure you want to terminate your session?</p>
+    <button onclick="confirmLogout(true)">Yes, Secure it</button>
+    <button onclick="confirmLogout(false)">Cancel</button>
+</div></div>
+    
+    <script src="fgt.js"></script>
+    <script src="test.js"></script>
+
+
+</body>
+</html>
